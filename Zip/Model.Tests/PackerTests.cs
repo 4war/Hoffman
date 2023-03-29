@@ -111,5 +111,21 @@ namespace Model.Tests
                 Assert.AreEqual(_encodedMessage[i], actual[i], $"index: {i}");
             }
         }
+
+        [Test]
+        public void Should_LessenSize()
+        {
+            var compressedDictionary = _packer.PackDictionary().ToList();
+            var compressedMessage = _packer.PackMessage(_message).ToList();
+
+            var statistics = new ZipStatistics()
+            {
+                MessageBytes = _message.Length,
+                CompressedBytes = compressedMessage.Count,
+                DictionaryBytes = compressedDictionary.Count
+            };
+            
+            Assert.IsFalse(statistics.CompressedRatio < 0.8);
+        }
     }
 }
