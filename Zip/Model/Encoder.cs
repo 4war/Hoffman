@@ -100,6 +100,11 @@ namespace Model
                 newNode = newNode.Parent;
             }
 
+            if (result == 0)
+            {
+                counter++;
+                result = 1;
+            }
             return new Figure()
             {
                 Size = (byte)counter,

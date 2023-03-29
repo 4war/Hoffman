@@ -208,7 +208,7 @@ namespace Model.Tests
                 ['g'] = new Figure(){Value = Convert.ToByte("0011", 2), Size = 4},
                 ['e'] = new Figure(){Value = Convert.ToByte("0010", 2), Size = 4},
                 ['o'] = new Figure(){Value = Convert.ToByte("0001", 2), Size = 4},
-                ['w'] = new Figure(){Value = Convert.ToByte("0000", 2), Size = 4},
+                ['w'] = new Figure(){Value = Convert.ToByte("00001", 2), Size = 5},
             };
         }
 

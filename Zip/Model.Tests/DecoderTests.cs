@@ -28,17 +28,17 @@ namespace Model.Tests
                     [Convert.ToByte("0011", 2)] = (byte)'g',
                     [Convert.ToByte("0010", 2)] = (byte)'e',
                     [Convert.ToByte("0001", 2)] = (byte)'o',
-                    [Convert.ToByte("0000", 2)] = (byte)'w',
                 },
                 [5] = new Dictionary<byte, byte>()
                 {
                     [Convert.ToByte("11111", 2)] = (byte)'r',
                     [Convert.ToByte("11110", 2)] = (byte)'a',
+                    [Convert.ToByte("00001", 2)] = (byte)'w',
                 }
             };
         
-        //                                               i |t|   |s  |t|a    |r   | t|s  |   |w  |i | t|h  |   |o  |n   |e  |  | t|h  |i  |n  |g   |
-        private readonly string _encodedMessageString = "10001101 11000111 11011111 01110010 10000100 01110110 10001111 00010101 01110110 01110001 10000000";
+        //                                               i |t|   |s  |t|a    |r   | t|s  |   |w   |i  |t|h  |   |o  |n   |e  |  | t|h  |i  |n  |g   |
+        private readonly string _encodedMessageString = "10001101 11000111 11011111 01110010 10000110 00111011 01000111 10001010 10111011 00111000 11000000";
         private readonly string _expectedMessage = "it starts with one thing";
         private readonly Decoder _decoder = new Decoder();
 
@@ -95,8 +95,8 @@ namespace Model.Tests
             _packedCodes.Add(Convert.ToByte("0001", 2));
             _packedCodes.Add((byte)'o');
             
-            _packedCodes.Add(0x04);
-            _packedCodes.Add(Convert.ToByte("0000", 2));
+            _packedCodes.Add(0x05);
+            _packedCodes.Add(Convert.ToByte("00001", 2));
             _packedCodes.Add((byte)'w');
 
             _encodedMessage = _encodedMessageString.Split().Select(x => Convert.ToByte(x,2)).ToList();
