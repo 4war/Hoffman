@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "4irs6wNxiZLpJqRYu/6H5tRWdg/mHlC5vnRtpg8O7MuI0XlYF6tgCrUA7mUPdsX28vfadHH/1S0WyQnkUEydJw==",
+  "dgSpecHash": "tuXDN69IenUhuABfuXH/o9hML2+kA4dLKX3UQmR6eZo2k8iqGRSRp5v0tIypZ3THtpZnpFDBYdAB/GkT5nlFtw==",
   "success": true,
   "projectFilePath": "D:\\Desktop\\Магистратура\\Семак 2\\БМВ\\Лабораторная работа №2\\Zip\\Model.Tests\\Model.Tests.csproj",
   "expectedPackageFiles": [
@@ -15,6 +15,7 @@
     "C:\\Users\\fedro\\.nuget\\packages\\microsoft.testplatform.testhost\\16.9.4\\microsoft.testplatform.testhost.16.9.4.nupkg.sha512",
     "C:\\Users\\fedro\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\fedro\\.nuget\\packages\\microsoft.win32.registry\\4.3.0\\microsoft.win32.registry.4.3.0.nupkg.sha512",
+    "C:\\Users\\fedro\\.nuget\\packages\\morelinq\\3.4.1\\morelinq.3.4.1.nupkg.sha512",
     "C:\\Users\\fedro\\.nuget\\packages\\netstandard.library\\2.0.0\\netstandard.library.2.0.0.nupkg.sha512",
     "C:\\Users\\fedro\\.nuget\\packages\\newtonsoft.json\\9.0.1\\newtonsoft.json.9.0.1.nupkg.sha512",
     "C:\\Users\\fedro\\.nuget\\packages\\nuget.frameworks\\5.0.0\\nuget.frameworks.5.0.0.nupkg.sha512",

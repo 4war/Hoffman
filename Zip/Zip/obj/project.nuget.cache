@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "/TpHGrVJg5/yOGWQBkw2gf1TT2dPCoHn61ATEQ6zw72ujz6vNy8I/ET6Pnn3QMiS97zGpC5WfsLGsx3HM1F3oQ==",
+  "dgSpecHash": "tiC6ZrkhUnib1SvlcBB8WcIhB4mxYxUoQRUUqVf9HZGxnwPy+crbYUQaKJZQ6IdbkPXmmhOEUSbvvjbG3Piv8A==",
   "success": true,
   "projectFilePath": "D:\\Desktop\\Магистратура\\Семак 2\\БМВ\\Лабораторная работа №2\\Zip\\Zip\\Zip.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\fedro\\.nuget\\packages\\morelinq\\3.4.1\\morelinq.3.4.1.nupkg.sha512"
+  ],
   "logs": []
 }
