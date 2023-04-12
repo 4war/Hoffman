@@ -31,7 +31,6 @@ namespace Model
                         counter = 7;
                         currentByte = 0;
                     }
-                  
                 }
             }
 

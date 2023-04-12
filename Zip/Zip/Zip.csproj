@@ -10,4 +10,10 @@
       <ProjectReference Include="..\Model\Model.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="CustomTextBox.cs">
+        <SubType>UserControl</SubType>
+      </Compile>
+    </ItemGroup>
+
 </Project>
