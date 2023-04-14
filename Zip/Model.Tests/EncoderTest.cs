@@ -215,7 +215,7 @@ namespace Model.Tests
         [Test]
         public void Should_GetCorrectCountDictionary()
         {
-            var actualDictionary = _encoder.GetCountDictionary(_message);
+            var actualDictionary = _encoder.GetFrequencies(_message);
             CollectionAssert.AreEqual(_expectedDictionary, actualDictionary);
         }
 

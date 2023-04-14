@@ -23,6 +23,7 @@ namespace Zip
         };
 
         private readonly List<string> _labels;
+
         private readonly Label _encodingsLabel = new Label()
         {
             Text = "Кодировка:",
@@ -34,7 +35,7 @@ namespace Zip
         private readonly ComboBox _encodingsComboBox = new ComboBox()
         {
             Location = new Point() { X = 200, Y = 10, },
-            Items = {  },
+            Items = { },
             Width = 300,
             FlatStyle = FlatStyle.Flat,
             Font = CustomTextBox.StaticFont,
@@ -44,7 +45,6 @@ namespace Zip
         private readonly CustomTextBox _inputMessageTextBox = new CustomTextBox("Исходное сообщение", 200, true)
         {
             Location = new Point() { X = 50, Y = 60 },
-            
         };
 
         private readonly CustomTextBox _dictionaryTextBox =
@@ -132,7 +132,7 @@ namespace Zip
 
         private Dictionary<char, Figure> UpdateDictionary()
         {
-            var message = _inputMessageTextBox.RichTextBox.Text;
+            var message = _inputMessageTextBox.RichTextBox.Text.ToLower().Replace("\n", " ");
 
             if (message.Length == 0)
             {
@@ -140,50 +140,66 @@ namespace Zip
                 return new Dictionary<char, Figure>();
             }
 
-            var frequencies = _encoder.GetCountDictionary(message);
-            var tree = _encoder.GetEncodingTree(frequencies);
-            var dictionary = _encoder.GetCodes(tree);
-
-            var list = new List<string>();
-            foreach (var kvp in frequencies.AsEnumerable().OrderByDescending(x => x.Value))
+            try
             {
-                var code = Convert.ToString(dictionary[kvp.Key].Value, 2).PadLeft(dictionary[kvp.Key].Size, '0');
-                list.Add($"{kvp.Key}: {code}: ({Math.Round(kvp.Value / (double)message.Length * 100, 2)}%)");
-            }
+                var frequencies = _encoder.GetFrequencies(message);
+                var tree = _encoder.GetEncodingTree(frequencies);
+                var dictionary = _encoder.GetCodes(tree);
 
-            _frequencyInfo.Text = string.Join("\n", list);
-            return dictionary;
+                var list = new List<string>();
+                foreach (var kvp in frequencies.AsEnumerable().OrderByDescending(x => x.Value))
+                {
+                    var code = Convert.ToString(dictionary[kvp.Key].Value, 2).PadLeft(dictionary[kvp.Key].Size, '0');
+                    list.Add($"{kvp.Key}: {code}: ({Math.Round(kvp.Value / (double)message.Length * 100, 2)}%)");
+                }
+
+                _frequencyInfo.Text = string.Join("\n", list);
+                return dictionary;
+            }
+            catch (ArgumentException e)
+            {
+                MessageBox.Show("Слишком много уникальных символов");
+                return new Dictionary<char, Figure>();
+            }
         }
 
         private void UpdateCustomTextBoxes(Dictionary<char, Figure> dictionary)
         {
-            var packer = new Packer(dictionary);
-            AbstractEncoder abstractEncoder = _encoders[_encodingsComboBox.SelectedIndex]; 
-
-            var packedDictionary = packer.PackDictionary(abstractEncoder).ToList();
-            var packedMessage = packer.PackMessage(_inputMessageTextBox.RichTextBox.Text).ToList();
-            _dictionaryTextBox.RichTextBox.Text =
-                string.Join("|", packedDictionary.Select(x => Convert.ToString(x, 2).PadLeft(8, '0')));
-            _zippedTextBox.RichTextBox.Text = string.Join("|", packedMessage.Select(x => Convert.ToString(x, 2)));
-
-            _dictionaryTextBox.Label.Text =
-                $"Словарь: Длина кода | Код при сжатии | {_labels[_encodingsComboBox.SelectedIndex]}";
-            var decodedMessage = _decoder.Execute(packedMessage, packedDictionary, abstractEncoder).ToList();
-            _decodedMessageTextBox.RichTextBox.Text = string.Join("", decodedMessage);
-
-            var statistics = new ZipStatistics()
+            try
             {
-                MessageBytes = decodedMessage.Count,
-                DictionaryBytes = packedDictionary.Count,
-                CompressedBytes = packedMessage.Count
-            };
+                var packer = new Packer(dictionary);
+                AbstractEncoder abstractEncoder = _encoders[_encodingsComboBox.SelectedIndex];
 
-            var statisticsList = new List<string>();
-            statisticsList.Add($"Размер сообщения: {statistics.MessageBytes} байт");
-            statisticsList.Add($"Размер словаря: {statistics.DictionaryBytes} байт");
-            statisticsList.Add($"Размер сжатого сообщения: {statistics.CompressedBytes} байт");
-            statisticsList.Add($"Коэффициент сжатия: {Math.Round(statistics.CompressedRatio, 2)}");
-            _statisticsInfo.Text = string.Join("\n", statisticsList);
+                var packedDictionary = packer.PackDictionary(abstractEncoder).ToList();
+                var packedMessage = packer
+                    .PackMessage(_inputMessageTextBox.RichTextBox.Text.ToLower().Replace("\n", " ")).ToList();
+                _dictionaryTextBox.RichTextBox.Text =
+                    string.Join("|", packedDictionary.Select(x => Convert.ToString(x, 2).PadLeft(8, '0')));
+                _zippedTextBox.RichTextBox.Text = string.Join("|", packedMessage.Select(x => Convert.ToString(x, 2)));
+
+                _dictionaryTextBox.Label.Text =
+                    $"Словарь: Длина кода | Код при сжатии | {_labels[_encodingsComboBox.SelectedIndex]}";
+                var decodedMessage = _decoder.Execute(packedMessage, packedDictionary, abstractEncoder).ToList();
+                _decodedMessageTextBox.RichTextBox.Text = string.Join("", decodedMessage);
+
+                var statistics = new ZipStatistics()
+                {
+                    MessageBytes = decodedMessage.Count,
+                    DictionaryBytes = packedDictionary.Count,
+                    CompressedBytes = packedMessage.Count
+                };
+
+                var statisticsList = new List<string>();
+                statisticsList.Add($"Размер сообщения: {statistics.MessageBytes} байт");
+                statisticsList.Add($"Размер словаря: {statistics.DictionaryBytes} байт");
+                statisticsList.Add($"Размер сжатого сообщения: {statistics.CompressedBytes} байт");
+                statisticsList.Add($"Коэффициент сжатия: {Math.Round(statistics.CompressedRatio, 2)}");
+                _statisticsInfo.Text = string.Join("\n", statisticsList);
+            }
+            catch (ArgumentException e)
+            {
+                MessageBox.Show("Слишком много уникальных символов");
+            }
         }
     }
 }

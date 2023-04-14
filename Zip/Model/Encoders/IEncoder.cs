@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace Model.Encoders
 {
+    /// <summary>
+    /// Пользователь сам выбирает кодировку
+    /// </summary>
     public abstract class AbstractEncoder
     {        
         public abstract string Name { get; }
@@ -12,6 +15,12 @@ namespace Model.Encoders
         public abstract byte[] Pack(char c);
         public abstract char Decode(byte[] bytes);
 
+        /// <summary>
+        /// Формирует словарь по длине - коду - букве для оптимизации
+        /// При этом буква может состоять как из 1, так и из 2 байт
+        /// </summary>
+        /// <param name="codes">плоский словарь</param>
+        /// <returns>Словарь по длине - коду - букве</returns>
         public Dictionary<byte, Dictionary<byte, byte[]>> GetSizeCodeDictionary(IEnumerable<byte> codes)
         {
             var result = new Dictionary<byte, Dictionary<byte, byte[]>>();

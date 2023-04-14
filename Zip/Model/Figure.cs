@@ -1,10 +1,11 @@
 ﻿namespace Model
 {
+    /// <summary>
+    /// СТРУКТУРА буквы в словаре
+    /// </summary>
     public struct Figure
     {
-        public byte Value { get; set; }
-        public byte Size { get; set; }
-        
-        public byte RealChar {get;set;}
+        public byte Value { get; set; } //Код
+        public byte Size { get; set; } //Длина кода
     }
 }
