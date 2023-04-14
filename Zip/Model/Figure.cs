@@ -1,7 +1,7 @@
 ﻿namespace Model
 {
     /// <summary>
-    /// СТРУКТУРА буквы в словаре
+    /// Структура буквы в словаре
     /// </summary>
     public struct Figure
     {
