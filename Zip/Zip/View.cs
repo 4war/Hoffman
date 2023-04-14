@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Model;
+using Model.Encoders;
 
 namespace Zip
 {
@@ -13,11 +14,15 @@ namespace Zip
         private readonly Encoder _encoder = new Encoder();
         private readonly Decoder _decoder = new Decoder();
 
-        private readonly List<string> _labels = new List<string>()
+        private readonly List<AbstractEncoder> _encoders = new List<AbstractEncoder>()
         {
-            "ASCII", "Unicode | Unicode"
+            new AsciiAbstractEncoder(),
+            new Windows1251(),
+            //new Utf8Encoder(),
+            new UnicodeAbstractEncoder(),
         };
 
+        private readonly List<string> _labels;
         private readonly Label _encodingsLabel = new Label()
         {
             Text = "Кодировка:",
@@ -26,14 +31,13 @@ namespace Zip
             AutoSize = true
         };
 
-        private readonly ComboBox _encodings = new ComboBox()
+        private readonly ComboBox _encodingsComboBox = new ComboBox()
         {
             Location = new Point() { X = 200, Y = 10, },
-            Items = { "ASCII (1 байт)", "Unicode (2 байта)" },
+            Items = {  },
             Width = 300,
             FlatStyle = FlatStyle.Flat,
             Font = CustomTextBox.StaticFont,
-            SelectedIndex = 0,
             DropDownStyle = ComboBoxStyle.DropDownList,
         };
 
@@ -97,13 +101,17 @@ namespace Zip
         public View()
         {
             InitializeComponent();
+            _labels = _encoders.Select(x => string.Join(" | ", Enumerable.Repeat(x.Name, x.Size))).ToList();
+            foreach (var item in _encoders.Select(x => $"{x.Name} ({x.SizeString})"))
+                _encodingsComboBox.Items.Add(item);
+            _encodingsComboBox.SelectedIndex = 0;
             Text = "Модель сжатия сообщения";
             BackColor = Color.FromArgb(171, 171, 171);
             Size = new Size() { Width = 1280, Height = 960 };
             _inputMessageTextBox.RichTextBox.TextChanged += (_, _) => Launch();
-            _encodings.SelectedIndexChanged += (_, _) => Launch();
+            _encodingsComboBox.SelectedIndexChanged += (_, _) => Launch();
             Controls.Add(_encodingsLabel);
-            Controls.Add(_encodings);
+            Controls.Add(_encodingsComboBox);
             Controls.Add(_inputMessageTextBox);
             Controls.Add(_zippedTextBox);
             Controls.Add(_dictionaryTextBox);
@@ -150,16 +158,17 @@ namespace Zip
         private void UpdateCustomTextBoxes(Dictionary<char, Figure> dictionary)
         {
             var packer = new Packer(dictionary);
+            AbstractEncoder abstractEncoder = _encoders[_encodingsComboBox.SelectedIndex]; 
 
-            var packedDictionary = packer.PackDictionary().ToList();
+            var packedDictionary = packer.PackDictionary(abstractEncoder).ToList();
             var packedMessage = packer.PackMessage(_inputMessageTextBox.RichTextBox.Text).ToList();
             _dictionaryTextBox.RichTextBox.Text =
                 string.Join("|", packedDictionary.Select(x => Convert.ToString(x, 2).PadLeft(8, '0')));
             _zippedTextBox.RichTextBox.Text = string.Join("|", packedMessage.Select(x => Convert.ToString(x, 2)));
 
             _dictionaryTextBox.Label.Text =
-                $"Словарь: Длина кода | Код при сжатии | {_labels[_encodings.SelectedIndex]}";
-            var decodedMessage = _decoder.Execute(packedMessage, packedDictionary).ToList();
+                $"Словарь: Длина кода | Код при сжатии | {_labels[_encodingsComboBox.SelectedIndex]}";
+            var decodedMessage = _decoder.Execute(packedMessage, packedDictionary, abstractEncoder).ToList();
             _decodedMessageTextBox.RichTextBox.Text = string.Join("", decodedMessage);
 
             var statistics = new ZipStatistics()

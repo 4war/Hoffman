@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Model.Encoders;
 using NUnit.Framework;
 
 namespace Model.Tests
@@ -95,7 +96,7 @@ namespace Model.Tests
         [Test]
         public void Should_PackCodesDictionaryCorrectly()
         {
-            var actual = _packer.PackDictionary().ToList();
+            var actual = _packer.PackDictionary(new AsciiAbstractEncoder()).ToList();
             for (var i = 0; i < actual.Count; i++)
             {
                 Assert.AreEqual(_expectedPackedCodes[i], actual[i], $"index: {i}");
@@ -115,7 +116,7 @@ namespace Model.Tests
         [Test]
         public void Should_LessenSize()
         {
-            var compressedDictionary = _packer.PackDictionary().ToList();
+            var compressedDictionary = _packer.PackDictionary(new AsciiAbstractEncoder()).ToList();
             var compressedMessage = _packer.PackMessage(_message).ToList();
 
             var statistics = new ZipStatistics()

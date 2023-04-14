@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "L1uR1zD25TUXVxSWGVUa60cJlZ6LHTtlKNCNhcZNjHuZO4wMsJGkiCgiljOaCjnDxLrKlD9wvQgEuEj7gibS6Q==",
+  "dgSpecHash": "pIOjonlwd0vp43yWOojBEfhUaiHFkrRAhKozRsYP3yUlWerkAOD9Xvyr8ZvYt5D1jxN8zzyqm2UUIKGtwifjfg==",
   "success": true,
   "projectFilePath": "D:\\Desktop\\Магистратура\\Семак 2\\БМВ\\Лабораторная работа №2\\Zip\\Model\\Model.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\fedro\\.nuget\\packages\\morelinq\\3.4.1\\morelinq.3.4.1.nupkg.sha512"
+    "C:\\Users\\fedro\\.nuget\\packages\\morelinq\\3.4.1\\morelinq.3.4.1.nupkg.sha512",
+    "C:\\Users\\fedro\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\fedro\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\fedro\\.nuget\\packages\\system.text.encoding.codepages\\7.0.0\\system.text.encoding.codepages.7.0.0.nupkg.sha512"
   ],
   "logs": []
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Model.Encoders;
 
 namespace Model
 {
@@ -40,18 +41,22 @@ namespace Model
             }
         }
 
-        public IEnumerable<byte> PackDictionary()
+        public IEnumerable<byte> PackDictionary(AbstractEncoder abstractEncoder)
         {
             foreach (var kvp in _codes)
             {
-                //Формат: 0000 ssss | xxxx xxxx | yyyy yyyy
-                //yy - общий код буквы 1 байт 
+                //Формат: 0000 ssss | xxxx xxxx | aaaa aaaa - ASCII
+                //Формат: 0000 ssss | xxxx xxxx | uuuu uuuu | uuuu uuuu - Unicode
+                //aaaa или uuuu - код ASCII или Unicode
                 //xx - код буквы по алгоритму сжатия
                 //ss - длина кода буквы (иначе нельзя определить 000 или 00)
                 //Это три отдельных байта, идущий друг за другом
                 yield return kvp.Value.Size;
                 yield return kvp.Value.Value;
-                yield return (byte)kvp.Key;
+                foreach (var b in abstractEncoder.Pack(kvp.Key))
+                {
+                    yield return b;
+                }
             }
         }
     }

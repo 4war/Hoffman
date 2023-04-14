@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Model.Encoders;
 using NUnit.Framework;
 
 namespace Model.Tests
@@ -8,32 +9,32 @@ namespace Model.Tests
     [TestFixture]
     public class DecoderTests
     {
-        private readonly Dictionary<byte, Dictionary<byte, byte>> _expectedCodes =
-            new Dictionary<byte, Dictionary<byte, byte>>()
+        private readonly Dictionary<byte, Dictionary<byte, byte[]>> _expectedCodes =
+            new Dictionary<byte, Dictionary<byte, byte[]>>()
             {
-                [2] = new Dictionary<byte, byte>()
+                [2] = new Dictionary<byte, byte[]>()
                 {
-                    [1] = (byte)'t',
+                    [1] = new []{(byte)'t'},
                 },
-                [3] = new Dictionary<byte, byte>()
+                [3] = new Dictionary<byte, byte[]>()
                 {
-                    [5] = (byte)' ',
-                    [4] = (byte)'i'
+                    [5] =  new []{(byte)' '},
+                    [4] =  new []{(byte)'i'}
                 },
-                [4] = new Dictionary<byte, byte>()
+                [4] = new Dictionary<byte, byte[]>()
                 {
-                    [Convert.ToByte("1110", 2)] = (byte)'n',
-                    [Convert.ToByte("1101", 2)] = (byte)'h',
-                    [Convert.ToByte("1100", 2)] = (byte)'s',
-                    [Convert.ToByte("0011", 2)] = (byte)'g',
-                    [Convert.ToByte("0010", 2)] = (byte)'e',
-                    [Convert.ToByte("0001", 2)] = (byte)'o',
+                    [Convert.ToByte("1110", 2)] = new []{(byte)'n'},
+                    [Convert.ToByte("1101", 2)] =  new []{(byte)'h'},
+                    [Convert.ToByte("1100", 2)] = new []{(byte)'s'},
+                    [Convert.ToByte("0011", 2)] =  new []{(byte)'g'},
+                    [Convert.ToByte("0010", 2)] =  new []{(byte)'e'},
+                    [Convert.ToByte("0001", 2)] =  new []{(byte)'o'},
                 },
-                [5] = new Dictionary<byte, byte>()
+                [5] = new Dictionary<byte, byte[]>()
                 {
-                    [Convert.ToByte("11111", 2)] = (byte)'r',
-                    [Convert.ToByte("11110", 2)] = (byte)'a',
-                    [Convert.ToByte("00001", 2)] = (byte)'w',
+                    [Convert.ToByte("11111", 2)] =  new []{(byte)'r'},
+                    [Convert.ToByte("11110", 2)] = new []{(byte)'a'},
+                    [Convert.ToByte("00001", 2)] =  new []{(byte)'w'},
                 }
             };
         
@@ -105,14 +106,14 @@ namespace Model.Tests
         [Test]
         public void Should_GetCorrectCodesDictionary()
         {
-            var actual = _decoder.GetSizeCodeDictionary(_packedCodes);
+            var actual = _decoder.GetSizeCodeDictionary(_packedCodes, new AsciiAbstractEncoder());
             CollectionAssert.AreEquivalent(_expectedCodes, actual);
         }
 
         [Test]
         public void Should_Decode()
         {
-            var actualEnumerable = _decoder.Execute(_encodedMessage, _packedCodes);
+            var actualEnumerable = _decoder.Execute(_encodedMessage, _packedCodes, new AsciiAbstractEncoder());
             var actualString = string.Join("", actualEnumerable);
             Assert.AreEqual(_expectedMessage, actualString);
         }

@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Model.Encoders;
 
 namespace Model
 {
     public class Decoder
     {
-        public IEnumerable<char> Execute(IEnumerable<byte> message, IEnumerable<byte> codes)
+        public IEnumerable<char> Execute(IEnumerable<byte> message, IEnumerable<byte> codes, AbstractEncoder abstractEncoder)
         {
             //Этот словарь словарей нужен для оптимизации поиска
             //Сейчас временная сложность O(1), а без него O(n)
-            var dictionary = GetSizeCodeDictionary(codes);
+            var dictionary = abstractEncoder.GetSizeCodeDictionary(codes);
             var result = new StringBuilder();
             byte currentCode = 0;
             byte currentSize = 0;
@@ -26,7 +28,7 @@ namespace Model
                     {
                         if (dictionary[currentSize].ContainsKey(currentCode))
                         {
-                            yield return (char)dictionary[currentSize][currentCode];
+                            yield return abstractEncoder.Decode(dictionary[currentSize][currentCode]);
                             currentCode = 0;
                             currentSize = 0;
                         }
@@ -34,7 +36,8 @@ namespace Model
 
                     if (currentSize > 8)
                     {
-                        throw new ArgumentException("Размер закодированной буквы больше 8 бит или ошибка в переданных аргументах");
+                        throw new ArgumentException(
+                            "Размер закодированной буквы больше 8 бит или ошибка в переданных аргументах");
                     }
                 }
             }
@@ -45,27 +48,9 @@ namespace Model
             }
         }
 
-        public Dictionary<byte, Dictionary<byte, byte>> GetSizeCodeDictionary(IEnumerable<byte> codes)
+        public IEnumerable GetSizeCodeDictionary(List<byte> packedCodes, AbstractEncoder abstractEncoder)
         {
-            var result = new Dictionary<byte, Dictionary<byte, byte>>();
-            var figure = new List<byte>();
-            foreach (var something in codes)
-            {
-                figure.Add(something);
-                if (figure.Count == 3)
-                {
-                    if (!result.ContainsKey(figure[0]))
-                    {
-                        result[figure[0]] = new Dictionary<byte, byte>();
-                    }
-
-                    result[figure[0]][figure[1]] = figure[2];
-                    
-                    figure.Clear();
-                }
-            }
-
-            return result;
+            return abstractEncoder.GetSizeCodeDictionary(packedCodes);
         }
     }
 }
